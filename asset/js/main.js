@@ -110,7 +110,6 @@ let songElapsedTime;
 let audio = new Audio(playList[index].song);
 
 document.addEventListener("DOMContentLoaded", () => {
-  // setSong(0);
   loadAlbum(playList.length);
   getSongInfo(0);
   setBackground(0);
@@ -119,19 +118,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 album.addEventListener("click", (e) => {
-  // let trackIndex;
   removeBackground(index);
-  const trackPlayBtn = e.target.closest(".track").querySelector(".fa-play");
-  const trackPauseBtn = e.target.closest(".track").querySelector(".fa-pause");
+  removeTrackBtn(index);
   let target = e.target.closest(".track");
   if (target) {
     index = [...album.children].indexOf(target);
     console.log("Clicked track: ", target);
     console.log("Clicked track index:", index);
   }
-
-  trackPlayBtn.style.display = "none";
-  trackPauseBtn.style.display = "block";
 
   pauseSong();
   audio = new Audio(playList[index].song);
@@ -245,7 +239,7 @@ function playSong(value) {
   playBtn.style.display = "none";
   pauseBtn.style.display = "block";
   setBackground(index);
-  setTrackPlayBtn();
+  setTrackBtn(index);
 }
 
 function pauseSong() {
@@ -254,57 +248,56 @@ function pauseSong() {
   audio.pause();
   playBtn.style.display = "block";
   pauseBtn.style.display = "none";
+  removeTrackBtn(index);
 }
 
 function nextSong() {
-  console.log("next");
   clearInterval(intervalId);
+  removeBackground(index);
+  removeTrackBtn(index);
   if (playList[index + 1] == null) {
     console.warn("No record");
     phonograph.classList.remove("animate-rotate");
   } else {
     audio.pause();
-
     index++;
-    audio = new Audio(playList[index].song);
-    getSongInfo(index);
-    setTimeStamp(0);
-    playBtn.style.display = "none";
-    pauseBtn.style.display = "block";
-    playSong(0);
+    selectSong(index);
   }
 }
 
 function prevSong() {
   clearInterval(intervalId);
+  removeBackground(index);
+  removeTrackBtn(index);
   if (playList[index - 1] == null) {
     console.warn("No record");
+    phonograph.classList.remove("animate-rotate");
   } else {
     audio.pause();
     index--;
-    audio = new Audio(playList[index].song);
-    getSongInfo(index);
-    setTimeStamp(0);
-    playBtn.style.display = "none";
-    pauseBtn.style.display = "block";
-    playSong(0);
+    selectSong(index);
   }
 }
 
-function getSongInfo(index) {
+function selectSong(value) {
+  audio = new Audio(playList[value].song);
+  getSongInfo(value);
+  setTimeStamp(0);
+  playBtn.style.display = "none";
+  pauseBtn.style.display = "block";
+  playSong(0);
+}
+
+function getSongInfo(value) {
   console.log("selecting song");
   audio.addEventListener("loadedmetadata", () => {
     songDuration = audio.duration;
-    console.log(
-      "🚀 ~ file: main.js:267 ~ audio.addEventListener ~ songDuration:",
-      songDuration
-    );
     let minutes = Math.floor(songDuration / 60);
     let seconds = Math.floor(songDuration % 60);
     seconds = seconds < 10 ? "0" + seconds : seconds;
-    phonograph.src = `${playList[index].image}`;
-    songTitle.innerHTML = `<p>${playList[index].title}</p>`;
-    singer.innerHTML = `<p>${playList[index].singer}</p>`;
+    phonograph.src = `${playList[value].image}`;
+    songTitle.innerHTML = `<p>${playList[value].title}</p>`;
+    singer.innerHTML = `<p>${playList[value].singer}</p>`;
     current_time.innerHTML = `<p>0:00</p>`;
     duration.innerHTML = `<p>${minutes}:${seconds}</p>`;
     playback_time.value = `0`;
@@ -359,8 +352,8 @@ function setTimeStamp(value) {
 function removeBackground(value) {
   [...album.children][value].style.background = "transparent";
 }
-function setBackground(value) {
 
+function setBackground(value) {
   [...album.children][value].style.background = "#1a1a1a";
 }
 
@@ -385,4 +378,24 @@ function loadAlbum(value) {
   }
 
   album.innerHTML = str;
+}
+
+function setTrackBtn(value) {
+  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
+  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
+  let overlay = [...album.children][value].querySelector(".overlay");
+
+  trackPlayBtn.style.display = "none";
+  trackPauseBtn.style.display = "block";
+  overlay.style.opacity = "1";
+}
+
+function removeTrackBtn(value) {
+  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
+  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
+  let overlay = [...album.children][value].querySelector(".overlay");
+
+  trackPlayBtn.style.display = "block";
+  trackPauseBtn.style.display = "none";
+  overlay.style.opacity = "0";
 }
