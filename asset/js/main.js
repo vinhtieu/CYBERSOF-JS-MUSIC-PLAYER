@@ -100,21 +100,20 @@ const btnUpload = document.querySelector("#btnUpload");
 const alert = document.querySelector("#alert");
 
 let intervalId;
+let isPlaying = false;
 let count = 1;
 let index = 0;
-playback_time.value = `0`;
-
 let sliderInput;
 let songDuration;
 let songElapsedTime;
 let audio = new Audio(playList[index].song);
+playback_time.value = `0`;
 
 document.addEventListener("DOMContentLoaded", () => {
   loadAlbum(playList.length);
   getSongInfo(0);
   setBackground(0);
-  playBtn.style.display = "block";
-  pauseBtn.style.display = "none";
+  setMusicPlayerPauseBtn();
 });
 
 album.addEventListener("click", (e) => {
@@ -123,15 +122,18 @@ album.addEventListener("click", (e) => {
   let target = e.target.closest(".track");
   if (target) {
     index = [...album.children].indexOf(target);
-    console.log("Clicked track: ", target);
-    console.log("Clicked track index:", index);
   }
 
-  pauseSong();
-  audio = new Audio(playList[index].song);
-  getSongInfo(index);
-  setTimeStamp(0);
-  playSong(0);
+  if (isPlaying === true) {
+    pauseSong();
+    isPlaying = false;
+  } else if (isPlaying === false) {
+    audio = new Audio(playList[index].song);
+    getSongInfo(index);
+    setTimeStamp(0);
+    playSong(0);
+    isPlaying = true;
+  }
 });
 
 playback_time.addEventListener("input", () => {
@@ -227,38 +229,42 @@ nextBtn.addEventListener("click", nextSong);
 // });
 
 function playSong(value) {
-  phonograph.classList.add("animate-rotate");
-  audio.currentTime = value;
-  audio.play();
-  intervalId = setInterval(() => {
-    getTimeStamp();
-    if (audio.currentTime - audio.duration == 0) {
-      nextSong();
-    }
-  }, 1000);
-  playBtn.style.display = "none";
-  pauseBtn.style.display = "block";
-  setBackground(index);
-  setTrackBtn(index);
+  if (isPlaying === false) {
+    phonograph.classList.add("animate-rotate");
+    audio.currentTime = value;
+    audio.play();
+    intervalId = setInterval(() => {
+      getTimeStamp();
+      if (audio.currentTime - audio.duration == 0) {
+        nextSong();
+      }
+    }, 1000);
+    setMusicPlayerPlayBtn();
+    setBackground(index);
+    setTrackPlayBtn(index);
+    isPlaying = true;
+  }
 }
 
 function pauseSong() {
-  phonograph.classList.remove("animate-rotate");
-  clearInterval(intervalId);
-  audio.pause();
-  playBtn.style.display = "block";
-  pauseBtn.style.display = "none";
-  removeTrackBtn(index);
+  if (isPlaying === true) {
+    phonograph.classList.remove("animate-rotate");
+    clearInterval(intervalId);
+    audio.pause();
+    setMusicPlayerPauseBtn();
+    setTrackPauseBtn(index);
+    isPlaying = false;
+  }
 }
 
 function nextSong() {
-  clearInterval(intervalId);
-  removeBackground(index);
-  removeTrackBtn(index);
   if (playList[index + 1] == null) {
     console.warn("No record");
     phonograph.classList.remove("animate-rotate");
   } else {
+    clearInterval(intervalId);
+    removeBackground(index);
+    removeTrackBtn(index);
     audio.pause();
     index++;
     selectSong(index);
@@ -266,13 +272,13 @@ function nextSong() {
 }
 
 function prevSong() {
-  clearInterval(intervalId);
-  removeBackground(index);
-  removeTrackBtn(index);
   if (playList[index - 1] == null) {
     console.warn("No record");
     phonograph.classList.remove("animate-rotate");
   } else {
+    clearInterval(intervalId);
+    removeBackground(index);
+    removeTrackBtn(index);
     audio.pause();
     index--;
     selectSong(index);
@@ -289,7 +295,6 @@ function selectSong(value) {
 }
 
 function getSongInfo(value) {
-  console.log("selecting song");
   audio.addEventListener("loadedmetadata", () => {
     songDuration = audio.duration;
     let minutes = Math.floor(songDuration / 60);
@@ -349,12 +354,51 @@ function setTimeStamp(value) {
   }
 }
 
+function setBackground(value) {
+  [...album.children][value].style.background = "#1a1a1a";
+}
+
 function removeBackground(value) {
   [...album.children][value].style.background = "transparent";
 }
 
-function setBackground(value) {
-  [...album.children][value].style.background = "#1a1a1a";
+function setMusicPlayerPlayBtn() {
+  playBtn.style.display = "none";
+  pauseBtn.style.display = "block";
+}
+function setMusicPlayerPauseBtn() {
+  playBtn.style.display = "block";
+  pauseBtn.style.display = "none";
+}
+
+function setTrackPlayBtn(value) {
+  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
+  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
+  let overlay = [...album.children][value].querySelector(".overlay");
+
+  trackPlayBtn.style.display = "none";
+  trackPauseBtn.style.display = "block";
+  overlay.style.opacity = "1";
+}
+
+function setTrackPauseBtn(value) {
+  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
+  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
+  let overlay = [...album.children][value].querySelector(".overlay");
+
+  trackPlayBtn.style.display = "block";
+  trackPauseBtn.style.display = "none";
+  overlay.style.opacity = "1";
+}
+
+function removeTrackBtn(value) {
+  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
+  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
+  let overlay = [...album.children][value].querySelector(".overlay");
+
+  trackPlayBtn.style.display = "block";
+  trackPauseBtn.style.display = "none";
+  overlay.style.opacity = "";
 }
 
 function loadAlbum(value) {
@@ -378,24 +422,4 @@ function loadAlbum(value) {
   }
 
   album.innerHTML = str;
-}
-
-function setTrackBtn(value) {
-  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
-  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
-  let overlay = [...album.children][value].querySelector(".overlay");
-
-  trackPlayBtn.style.display = "none";
-  trackPauseBtn.style.display = "block";
-  overlay.style.opacity = "1";
-}
-
-function removeTrackBtn(value) {
-  let trackPlayBtn = [...album.children][value].querySelector(".fa-play");
-  let trackPauseBtn = [...album.children][value].querySelector(".fa-pause");
-  let overlay = [...album.children][value].querySelector(".overlay");
-
-  trackPlayBtn.style.display = "block";
-  trackPauseBtn.style.display = "none";
-  overlay.style.opacity = "0";
 }
