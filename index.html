@@ -30,7 +30,7 @@
             <div class="music-singer"></div>
           </div>
           <div class="card__playback-time">
-            <div id="current-time"></div>
+            <div id="current-time">0:00</div>
             <div class="time-indicator">
               <div
                 class="progress"
@@ -52,11 +52,12 @@
                 type="range"
                 class="form-range"
                 id="playback-time"
+                value="0"
                 min="0"
                 max="100"
               />
             </div>
-            <div id="duration"></div>
+            <div id="duration">0:00</div>
           </div>
           <div class="card__control">
             <button type="button" class="card__prev">
@@ -91,7 +92,12 @@
         </div>
         <div class="album">
           <div class="track track-1">
-            <div class="track__image"></div>
+            <div class="track__image">
+              <div class="overlay">
+                
+              </div>
+            </div>
+
             <div class="track__content">
               <div class="track__title"></div>
               <div class="track__singer"></div>

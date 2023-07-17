@@ -1,53 +1,74 @@
-// let playList = [
-//   {
-//     image: "./asset/img/Aimer.png",
-//     song: "./asset/music/Aimer 『星屑ビーナス』×360RealityAudio _ スペシャルビデオ.mp4",
-//     title: "Hoshikuzu Venus",
-//   },
-//   {
-//     image: "./asset/img/just-the-2-of-us.jpg",
-//     song: "./asset/music/Just the Two of Us.mp4",
-//   },
-//   {
-//     image: "./asset/img/koibito-yo.png",
-//     song: "../music/koibito-yo.mp4",
-//   },
-//   {
-//     image: "./asset/img/le-geant-de-papier.jpg",
-//     song: "../music/Le Géant De Papier.mp4",
-//   },
-//   {
-//     image: "./asset/img/le-temps-des-fleurs.jpg",
-//     song: "../music/le-temps-des-fleurs.mp4",
-//   },
-//   {
-//     image: "./asset/img/matabaki.jpg",
-//     song: "../music/matabaki.mp4",
-//   },
-//   {
-//     image: "./asset/img/OG-Facebook-Mariya.jpg",
-//     song: "../music/Plastic-Love.mp4",
-//   },
-//   {
-//     image: "./asset/img/stay-with-me.jfif",
-//     song: "../music/Miki Matsubara - Stay With Me HD (Club Mix).mp4",
-//   },
-//   {
-//     image: "./asset/img/still-got-the-blues.jfif",
-//     song: "../music/still-got-the-blues.mp4",
-//   },
-//   {
-//     image: "./asset/img/until-i-found-you.jpg",
-//     song: "../music/until-i-found-you.mp3",
-//   },
-//   {
-//     image: "./asset/img/Yuki_no_Hana.jpg",
-//     song: "../music/yuki-no-hana.mp4",
-//   },
-// ];
+let playList = [
+  {
+    image: "./asset/img/yuki-no-hana.jpg",
+    song: "./asset/music/yuki-no-hana.mp4",
+    title: "Snow Flower",
+    singer: "Mika Nakashima",
+  },
+  {
+    image: "./asset/img/until-i-found-you.jpg",
+    song: "./asset/music/until-i-found-you.mp3",
+    title: "Until I Found You",
+    singer: "Stephen Sanchez",
+  },
+  {
+    image: "./asset/img/just-the-two-of-us.jpg",
+    song: "./asset/music/just-the-two-of-us.mp4",
+    title: "Just The Two Of Us",
+    singer: "Bill Withers",
+  },
+  {
+    image: "./asset/img/still-got-the-blues.jfif",
+    song: "./asset/music/still-got-the-blues.mp4",
+    title: "Still Got The Blues",
+    singer: "Gary Moore",
+  },
+  {
+    image: "./asset/img/stay-with-me.jfif",
+    song: "./asset/music/stay-with-me.mp4",
+    title: "Stay With Me",
+    singer: "Miki Matsubara",
+  },
+  {
+    image: "./asset/img/plastic-love.jpg",
+    song: "./asset/music/plastic-love.mp4",
+    title: "Plastic Love",
+    singer: "Mariya Takeuchi",
+  },
+  {
+    image: "./asset/img/matabaki.jpg",
+    song: "./asset/music/matabaki.mp4",
+    title: "Mabataki",
+    singer: "Back Number",
+  },
+  {
+    image: "./asset/img/le-temps-des-fleurs.jpg",
+    song: "./asset/music/le-temps-des-fleurs.mp4",
+    title: "Le Temps Des Fleurs",
+    singer: "Dalida",
+  },
+  {
+    image: "./asset/img/le-geant-de-papier.jpg",
+    song: "./asset/music/le-geant-de-papier.mp4",
+    title: "Le Geant De Papier",
+    singer: "Anastasio Eric",
+  },
+  {
+    image: "./asset/img/aimer.jpg",
+    song: "./asset/music/hoshikuzu-venus.mp4",
+    title: "Hoshikuzu Venus",
+    singer: "Aimer",
+  },
+  {
+    image: "./asset/img/koibito-yo.jpg",
+    song: "./asset/music/koibito-yo.mp4",
+    title: "Koibito Yo",
+    singer: "Itsuwa Mayumi",
+  },
+];
 
-const storedData = localStorage.getItem("playList");
-const musicCollection = JSON.parse(storedData);
+// const storedData = localStorage.getItem("playList");
+// const playList = JSON.parse(storedData);
 const btnSideCard = document.querySelector("#btnSideCard");
 
 const album = document.querySelector(".album");
@@ -86,11 +107,11 @@ playback_time.value = `0`;
 let sliderInput;
 let songDuration;
 let songElapsedTime;
-let audio = new Audio(musicCollection[index].song);
+let audio = new Audio(playList[index].song);
 
 document.addEventListener("DOMContentLoaded", () => {
   // setSong(0);
-  loadAlbum(musicCollection.length);
+  loadAlbum(playList.length);
   getSongInfo(0);
   setBackground(0);
   playBtn.style.display = "block";
@@ -100,26 +121,23 @@ document.addEventListener("DOMContentLoaded", () => {
 album.addEventListener("click", (e) => {
   // let trackIndex;
   removeBackground(index);
-  console.log(
-    "🚀 ~ file: main.js:103 ~ album.addEventListener ~ index:",
-    index
-  );
-
+  const trackPlayBtn = e.target.closest(".track").querySelector(".fa-play");
+  const trackPauseBtn = e.target.closest(".track").querySelector(".fa-pause");
   let target = e.target.closest(".track");
   if (target) {
     index = [...album.children].indexOf(target);
     console.log("Clicked track: ", target);
     console.log("Clicked track index:", index);
   }
+
+  trackPlayBtn.style.display = "none";
+  trackPauseBtn.style.display = "block";
+
   pauseSong();
-  audio = new Audio(musicCollection[index].song);
+  audio = new Audio(playList[index].song);
   getSongInfo(index);
   setTimeStamp(0);
   playSong(0);
-  console.log(
-    "🚀 ~ file: main.js:103 ~ album.addEventListener ~ index:",
-    index
-  );
 });
 
 playback_time.addEventListener("input", () => {
@@ -144,79 +162,78 @@ pauseBtn.addEventListener("click", pauseSong);
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click", nextSong);
 
-btnSideCard.addEventListener("click", () => {
-  uploadFile.classList.toggle("slide-in");
+// btnSideCard.addEventListener("click", () => {
+//   uploadFile.classList.toggle("slide-in");
 
-  if (count % 2 == 0) {
-    btnSideCard.innerHTML = `
-        <i class="fa fa-angle-double-left"></i>
-        `;
+//   if (count % 2 == 0) {
+//     btnSideCard.innerHTML = `
+//         <i class="fa fa-angle-double-left"></i>
+//         `;
 
-    btnSideCard.style.background = "#0d1326";
-    btnSideCard.style.color = "white";
-    count++;
-  } else {
-    btnSideCard.innerHTML = `<i class="fa fa-angle-double-right"></i>`;
-    btnSideCard.style.background = "rgba(255, 255, 255, 1)";
-    btnSideCard.style.color = "black";
-    count++;
-  }
-});
+//     btnSideCard.style.background = "#0d1326";
+//     btnSideCard.style.color = "white";
+//     count++;
+//   } else {
+//     btnSideCard.innerHTML = `<i class="fa fa-angle-double-right"></i>`;
+//     btnSideCard.style.background = "rgba(255, 255, 255, 1)";
+//     btnSideCard.style.color = "black";
+//     count++;
+//   }
+// });
 
-btnUpload.addEventListener("click", () => {
-  let nameImg = imgFile.value;
-  let nameFile = mp3File.value;
-  let songTitle = title.value;
-  let songPerformer = performer.value;
-  if (
-    nameImg == "" ||
-    nameFile == "" ||
-    songTitle == "" ||
-    songPerformer == ""
-  ) {
-    alert.classList.toggle("hide");
-    alert.classList.add("alert-danger");
-    alert.innerHTML = `❌ Please Fill All The Blanks`;
-  } else {
-    let obj = {
-      image: `./asset/img/${nameImg}`,
-      song: `./asset/music/${nameFile}`,
-      title: `${songTitle}`,
-      singer: `${songPerformer}`,
-    };
+// btnUpload.addEventListener("click", () => {
+//   let nameImg = imgFile.value;
+//   let nameFile = mp3File.value;
+//   let songTitle = title.value;
+//   let songPerformer = performer.value;
+//   if (
+//     nameImg == "" ||
+//     nameFile == "" ||
+//     songTitle == "" ||
+//     songPerformer == ""
+//   ) {
+//     alert.classList.toggle("hide");
+//     alert.classList.add("alert-danger");
+//     alert.innerHTML = `❌ Please Fill All The Blanks`;
+//   } else {
+//     let obj = {
+//       image: `./asset/img/${nameImg}`,
+//       song: `./asset/music/${nameFile}`,
+//       title: `${songTitle}`,
+//       singer: `${songPerformer}`,
+//     };
 
-    if (musicCollection === null) {
-      let array = [];
-      array.push(obj);
-      let jsonData = JSON.stringify(array);
-      localStorage.setItem("playList", jsonData);
-    } else {
-      musicCollection.push(obj);
-      let jsonData = JSON.stringify(musicCollection);
-      localStorage.setItem("playList", jsonData);
-    }
+//     if (playList === null) {
+//       let array = [];
+//       array.push(obj);
+//       let jsonData = JSON.stringify(array);
+//       localStorage.setItem("playList", jsonData);
+//     } else {
+//       playList.push(obj);
+//       let jsonData = JSON.stringify(playList);
+//       localStorage.setItem("playList", jsonData);
+//     }
 
-    alert.classList.toggle("hide");
-    alert.classList.remove("alert-danger");
-    alert.classList.add("alert-success");
-    alert.innerHTML = `✔️ Success`;
-    imgFile.value = "";
-    mp3File.value = "";
-    title.value = "";
-    performer.value = "";
-  }
+//     alert.classList.toggle("hide");
+//     alert.classList.remove("alert-danger");
+//     alert.classList.add("alert-success");
+//     alert.innerHTML = `✔️ Success`;
+//     imgFile.value = "";
+//     mp3File.value = "";
+//     title.value = "";
+//     performer.value = "";
+//   }
 
-  setTimeout(() => {
-    alert.classList.toggle("hide");
-  }, 5000);
+//   setTimeout(() => {
+//     alert.classList.toggle("hide");
+//   }, 5000);
 
-  //  localStorage.clear();
-  //   console.log(musicCollection);
-});
+//   //  localStorage.clear();
+//   //   console.log(playList);
+// });
 
 function playSong(value) {
   phonograph.classList.add("animate-rotate");
-
   audio.currentTime = value;
   audio.play();
   intervalId = setInterval(() => {
@@ -228,6 +245,7 @@ function playSong(value) {
   playBtn.style.display = "none";
   pauseBtn.style.display = "block";
   setBackground(index);
+  setTrackPlayBtn();
 }
 
 function pauseSong() {
@@ -241,14 +259,14 @@ function pauseSong() {
 function nextSong() {
   console.log("next");
   clearInterval(intervalId);
-  if (musicCollection[index + 1] == null) {
+  if (playList[index + 1] == null) {
     console.warn("No record");
     phonograph.classList.remove("animate-rotate");
   } else {
     audio.pause();
 
     index++;
-    audio = new Audio(musicCollection[index].song);
+    audio = new Audio(playList[index].song);
     getSongInfo(index);
     setTimeStamp(0);
     playBtn.style.display = "none";
@@ -259,12 +277,12 @@ function nextSong() {
 
 function prevSong() {
   clearInterval(intervalId);
-  if (musicCollection[index - 1] == null) {
+  if (playList[index - 1] == null) {
     console.warn("No record");
   } else {
     audio.pause();
     index--;
-    audio = new Audio(musicCollection[index].song);
+    audio = new Audio(playList[index].song);
     getSongInfo(index);
     setTimeStamp(0);
     playBtn.style.display = "none";
@@ -284,9 +302,9 @@ function getSongInfo(index) {
     let minutes = Math.floor(songDuration / 60);
     let seconds = Math.floor(songDuration % 60);
     seconds = seconds < 10 ? "0" + seconds : seconds;
-    phonograph.src = `${musicCollection[index].image}`;
-    songTitle.innerHTML = `<p>${musicCollection[index].title}</p>`;
-    singer.innerHTML = `<p>${musicCollection[index].singer}</p>`;
+    phonograph.src = `${playList[index].image}`;
+    songTitle.innerHTML = `<p>${playList[index].title}</p>`;
+    singer.innerHTML = `<p>${playList[index].singer}</p>`;
     current_time.innerHTML = `<p>0:00</p>`;
     duration.innerHTML = `<p>${minutes}:${seconds}</p>`;
     playback_time.value = `0`;
@@ -342,14 +360,8 @@ function removeBackground(value) {
   [...album.children][value].style.background = "transparent";
 }
 function setBackground(value) {
-  if (value == 0) {
-    [...album.children][0].style.background = "#1a1a1a";
-    [...album.children][value + 1].style.background = "transparent";
-  } else {
-    [...album.children][value - 1].style.background = "transparent";
-    [...album.children][value + 1].style.background = "transparent";
-    [...album.children][value].style.background = "#1a1a1a";
-  }
+
+  [...album.children][value].style.background = "#1a1a1a";
 }
 
 function loadAlbum(value) {
@@ -359,15 +371,18 @@ function loadAlbum(value) {
     str += `
       <div class="track track-${i + 1}">
             <div class="track__image">
-            <img src='${musicCollection[i].image}'/>
+              <img src='${playList[i].image}'/>
+              <div class="overlay">
+               <i class="fa fa-play" id="trackPlayBtn"></i>
+                <i class="fas fa-pause" id="trackPauseBtn"></i>
+              </div>
             </div>
             <div class="track__content">
-              <div class="track__title">${musicCollection[i].title}</div>
-              <div class="track__singer">${musicCollection[i].singer}</div>
+              <div class="track__title">${playList[i].title}</div>
+              <div class="track__singer">${playList[i].singer}</div>
             </div>
           </div>`;
   }
 
   album.innerHTML = str;
 }
-console.table(musicCollection);
