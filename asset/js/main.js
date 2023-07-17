@@ -103,6 +103,7 @@ let intervalId;
 let isPlaying = false;
 let count = 1;
 let index = 0;
+let trackPointer = 0;
 let sliderInput;
 let songDuration;
 let songElapsedTime;
@@ -124,15 +125,23 @@ album.addEventListener("click", (e) => {
     index = [...album.children].indexOf(target);
   }
 
-  if (isPlaying === true) {
+  if (trackPointer == index) {
+    if (isPlaying === true) {
+      pauseSong();
+      isPlaying = false;
+    } else {
+      let value = Math.floor(audio.currentTime);
+      playSong(value);
+      isPlaying = true;
+    }
+  } else {
     pauseSong();
-    isPlaying = false;
-  } else if (isPlaying === false) {
     audio = new Audio(playList[index].song);
     getSongInfo(index);
     setTimeStamp(0);
     playSong(0);
     isPlaying = true;
+    trackPointer = index;
   }
 });
 
@@ -267,6 +276,7 @@ function nextSong() {
     removeTrackBtn(index);
     audio.pause();
     index++;
+    trackPointer++;
     selectSong(index);
   }
 }
@@ -281,6 +291,7 @@ function prevSong() {
     removeTrackBtn(index);
     audio.pause();
     index--;
+    trackPointer--;
     selectSong(index);
   }
 }
