@@ -58,15 +58,11 @@ p {
   height: 625px;
   width: 375px;
   color: white;
-  overflow-y: hidden;
-}
-
-.album:hover {
   overflow-y: scroll;
 }
 
-.album:hover {
-  overflow-y: scroll;
+.album:hover::-webkit-scrollbar-thumb {
+  background: #555;
 }
 
 .album::-webkit-scrollbar {
@@ -78,7 +74,7 @@ p {
 }
 
 .album::-webkit-scrollbar-thumb {
-  background: #555;
+  background: transparent;
   border-radius: 10px;
   border: 5px solid black;
 }
@@ -145,6 +141,27 @@ p {
   justify-content: space-around;
 }
 
+.track__duration {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.track__option {
+  width: 30px;
+  height: 60px;
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.track:hover .track__duration {
+  display: none;
+}
+.track:hover .track__option {
+  display: flex;
+}
 .music-player {
   flex: 1;
   display: flex;
@@ -157,12 +174,12 @@ p {
 }
 
 .card__phonograph-record {
-  box-shadow: #000000 0px 6px 5px 0px;
   color: white;
-  height: 15rem;
-  width: 15rem;
+  height: 16rem;
+  width: 16rem;
   border-radius: 50%;
   margin-top: 25px;
+  margin-bottom: 35px;
   overflow: hidden;
 }
 
@@ -202,34 +219,65 @@ p {
 .time-indicator {
   width: 100%;
   height: 100%;
-  position: relative;
+  display: flex;
+  align-items: center;
+  left: 100px;
 }
 
-#playback-time,
 #progress-container {
   height: 8px;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-}
-
-#playback-time::-webkit-slider-runnable-track {
-  color: transparent;
-  background-color: transparent;
-}
-#playback-time::-webkit-slider-thumb {
-  background-color: #11998e;
-  /* position: relative; */
-  /* left: -0.5px; */
-}
-
-#progress-container {
   width: 100%;
+  overflow: visible;
+  border-radius: 8px;
 }
 
 #progress-bar {
   transition: none;
+  position: relative;
+  overflow: visible;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#progress-bar::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  background: #0d6efd;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.5s;
+  z-index: 1;
+}
+
+#progress-bar:hover::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  right: -7.5px;
+}
+
+#progress-bar::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  right: -7.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.5s;
+}
+
+#progress-bar:hover::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  right: -10px;
 }
 
 .card__control {
@@ -260,7 +308,7 @@ p {
   height: 65px;
   font-size: 30px;
   color: white;
-  background-color: #11998e;
+  background: linear-gradient(to right, #38ef7d, #11998e);
 }
 
 .card__play-pause .fa-play {
@@ -274,7 +322,7 @@ p {
 .card__prev {
   width: 55px;
   height: 55px;
-  font-size: 20px;
+  font-size: 30px;
   background: transparent;
 }
 

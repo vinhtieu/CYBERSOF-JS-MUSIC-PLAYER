@@ -51,7 +51,7 @@ let playList = [
     image: "./asset/img/le-geant-de-papier.jpg",
     song: "./asset/music/le-geant-de-papier.mp4",
     title: "Le Geant De Papier",
-    singer: "Anastasio Eric",
+    singer: "Jean Jacques Lafon",
   },
   {
     image: "./asset/img/aimer.jpg",
@@ -65,10 +65,32 @@ let playList = [
     title: "Koibito Yo",
     singer: "Itsuwa Mayumi",
   },
+  {
+    image: "./asset/img/les-valses-de-vienne.jpg",
+    song: "./asset/music/les-valses-de-vienne.mp4",
+    title: "Les Valses De Vienne",
+    singer: "Francois Feldman",
+  },
+  {
+    image: "./asset/img/notre-dame-de-paris.jfif",
+    song: "./asset/music/notre-dame-de-paris.mp4",
+    title: "Notre Dame De Paris",
+    singer: "Belle",
+  },
+  {
+    image: "./asset/img/stand-by-me.jpg",
+    song: "./asset/music/stand-by-me.mp4",
+    title: "Stand By Me",
+    singer: "Seal",
+  },
+  {
+    image: "./asset/img/when-a-man-loves-a-woman.jpg",
+    song: "./asset/music/when-a-man-loves-a-woman.mp4",
+    title: "When A Man Loves A Woman",
+    singer: "Michael Bolton",
+  },
 ];
 
-// const storedData = localStorage.getItem("playList");
-// const playList = JSON.parse(storedData);
 const btnSideCard = document.querySelector("#btnSideCard");
 
 const album = document.querySelector(".album");
@@ -101,6 +123,8 @@ const alert = document.querySelector("#alert");
 
 let intervalId;
 let isPlaying = false;
+let isMouseUp = false;
+let isDragging = false;
 let count = 1;
 let index = 0;
 let trackPointer = 0;
@@ -108,16 +132,66 @@ let sliderInput;
 let songDuration;
 let songElapsedTime;
 let audio = new Audio(playList[index].song);
-playback_time.value = `0`;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", (e) => {
   loadAlbum(playList.length);
   getSongInfo(0);
   setBackground(0);
   setMusicPlayerPauseBtn();
+  setTrackPauseBtn(index);
+  progress_bar.style.width = "0%";
+});
+
+// The user skipping the music
+progress_bar_container.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  isMouseUp = true;
+});
+
+// The progress bar can be dragged
+// Even when the mouse pointer goes outside the progress bar area
+document.addEventListener("mousemove", (e) => {
+  if (isDragging) {
+    let timeSkip = getTimeSkip(e);
+    setTimeStamp(timeSkip);
+  }
+});
+
+progress_bar_container.addEventListener("mousemove", (e) => {
+  if (isDragging) {
+    let timeSkip = getTimeSkip(e);
+    setTimeStamp(timeSkip);
+  }
+});
+
+// The user releasing the timestamp outside the progress_bar
+document.addEventListener("mouseup", (e) => {
+  if (isMouseUp) {
+    let timeSkip = getTimeSkip(e);
+    setTimeStamp(timeSkip);
+    setMusicPlayerPlayBtn();
+    setTrackPlayBtn(index);
+    pauseSong();
+    playSong(timeSkip);
+  }
+  isMouseUp = false;
+  isDragging = false;
+});
+
+progress_bar_container.addEventListener("mouseup", (e) => {
+  let timeSkip = getTimeSkip(e);
+  setTimeStamp(timeSkip);
+  setMusicPlayerPlayBtn();
+  setTrackPlayBtn(index);
+  pauseSong();
+  playSong(timeSkip);
+  isMouseUp = false;
+  isDragging = false;
 });
 
 album.addEventListener("click", (e) => {
+  console.log(`positionX: ${e.clientX}`);
+
   removeBackground(index);
   removeTrackBtn(index);
   let target = e.target.closest(".track");
@@ -128,10 +202,15 @@ album.addEventListener("click", (e) => {
   if (trackPointer == index) {
     if (isPlaying === true) {
       pauseSong();
+      setMusicPlayerPauseBtn();
+      setTrackPauseBtn(index);
       isPlaying = false;
     } else {
       let value = Math.floor(audio.currentTime);
       playSong(value);
+      setMusicPlayerPlayBtn();
+      setBackground(index);
+      setTrackPlayBtn(index);
       isPlaying = true;
     }
   } else {
@@ -140,16 +219,12 @@ album.addEventListener("click", (e) => {
     getSongInfo(index);
     setTimeStamp(0);
     playSong(0);
+    setMusicPlayerPlayBtn();
+    setBackground(index);
+    setTrackPlayBtn(index);
     isPlaying = true;
     trackPointer = index;
   }
-});
-
-playback_time.addEventListener("input", () => {
-  sliderInput = Math.floor((playback_time.value * audio.duration) / 100);
-  setTimeStamp(sliderInput);
-  pauseSong();
-  playSong(sliderInput);
 });
 
 // volumeInput.addEventListener("input", () => {
@@ -161,81 +236,29 @@ playback_time.addEventListener("input", () => {
 playBtn.addEventListener("click", () => {
   let value = Math.floor(audio.currentTime);
   playSong(value);
+  setMusicPlayerPlayBtn();
+  setBackground(index);
+  setTrackPlayBtn(index);
+});
+pauseBtn.addEventListener("click", () => {
+  pauseSong();
+  setMusicPlayerPauseBtn();
+  setTrackPauseBtn(index);
+});
+prevBtn.addEventListener("click", () => {
+  prevSong();
+});
+nextBtn.addEventListener("click", () => {
+  nextSong();
 });
 
-pauseBtn.addEventListener("click", pauseSong);
-prevBtn.addEventListener("click", prevSong);
-nextBtn.addEventListener("click", nextSong);
 
-// btnSideCard.addEventListener("click", () => {
-//   uploadFile.classList.toggle("slide-in");
-
-//   if (count % 2 == 0) {
-//     btnSideCard.innerHTML = `
-//         <i class="fa fa-angle-double-left"></i>
-//         `;
-
-//     btnSideCard.style.background = "#0d1326";
-//     btnSideCard.style.color = "white";
-//     count++;
-//   } else {
-//     btnSideCard.innerHTML = `<i class="fa fa-angle-double-right"></i>`;
-//     btnSideCard.style.background = "rgba(255, 255, 255, 1)";
-//     btnSideCard.style.color = "black";
-//     count++;
-//   }
-// });
-
-// btnUpload.addEventListener("click", () => {
-//   let nameImg = imgFile.value;
-//   let nameFile = mp3File.value;
-//   let songTitle = title.value;
-//   let songPerformer = performer.value;
-//   if (
-//     nameImg == "" ||
-//     nameFile == "" ||
-//     songTitle == "" ||
-//     songPerformer == ""
-//   ) {
-//     alert.classList.toggle("hide");
-//     alert.classList.add("alert-danger");
-//     alert.innerHTML = `❌ Please Fill All The Blanks`;
-//   } else {
-//     let obj = {
-//       image: `./asset/img/${nameImg}`,
-//       song: `./asset/music/${nameFile}`,
-//       title: `${songTitle}`,
-//       singer: `${songPerformer}`,
-//     };
-
-//     if (playList === null) {
-//       let array = [];
-//       array.push(obj);
-//       let jsonData = JSON.stringify(array);
-//       localStorage.setItem("playList", jsonData);
-//     } else {
-//       playList.push(obj);
-//       let jsonData = JSON.stringify(playList);
-//       localStorage.setItem("playList", jsonData);
-//     }
-
-//     alert.classList.toggle("hide");
-//     alert.classList.remove("alert-danger");
-//     alert.classList.add("alert-success");
-//     alert.innerHTML = `✔️ Success`;
-//     imgFile.value = "";
-//     mp3File.value = "";
-//     title.value = "";
-//     performer.value = "";
-//   }
-
-//   setTimeout(() => {
-//     alert.classList.toggle("hide");
-//   }, 5000);
-
-//   //  localStorage.clear();
-//   //   console.log(playList);
-// });
+function getTimeSkip(e) {
+  let positionX = e.clientX - progress_bar_container.offsetLeft;
+  let width = (positionX * 100) / progress_bar_container.clientWidth;
+  let timeSkip = (width * audio.duration) / 100;
+  return timeSkip;
+}
 
 function playSong(value) {
   if (isPlaying === false) {
@@ -248,9 +271,7 @@ function playSong(value) {
         nextSong();
       }
     }, 1000);
-    setMusicPlayerPlayBtn();
-    setBackground(index);
-    setTrackPlayBtn(index);
+
     isPlaying = true;
   }
 }
@@ -260,8 +281,6 @@ function pauseSong() {
     phonograph.classList.remove("animate-rotate");
     clearInterval(intervalId);
     audio.pause();
-    setMusicPlayerPauseBtn();
-    setTrackPauseBtn(index);
     isPlaying = false;
   }
 }
@@ -269,40 +288,54 @@ function pauseSong() {
 function nextSong() {
   if (playList[index + 1] == null) {
     console.warn("No record");
-    phonograph.classList.remove("animate-rotate");
+    pauseSong();
+    resetSong();
   } else {
     clearInterval(intervalId);
     removeBackground(index);
     removeTrackBtn(index);
-    audio.pause();
+    pauseSong();
     index++;
     trackPointer++;
     selectSong(index);
+    setMusicPlayerPlayBtn();
+    setBackground(index);
+    setTrackPlayBtn(index);
+    playSong(0);
   }
 }
 
 function prevSong() {
   if (playList[index - 1] == null) {
     console.warn("No record");
-    phonograph.classList.remove("animate-rotate");
+    pauseSong();
+    resetSong();
   } else {
     clearInterval(intervalId);
     removeBackground(index);
     removeTrackBtn(index);
-    audio.pause();
+    pauseSong();
     index--;
     trackPointer--;
     selectSong(index);
+    setMusicPlayerPlayBtn();
+    setBackground(index);
+    setTrackPlayBtn(index);
+    playSong(0);
   }
 }
 
 function selectSong(value) {
   audio = new Audio(playList[value].song);
+  resetSong();
   getSongInfo(value);
+}
+
+function resetSong() {
+  phonograph.classList.remove("animate-rotate");
+  setMusicPlayerPauseBtn();
+  setTrackPauseBtn(index);
   setTimeStamp(0);
-  playBtn.style.display = "none";
-  pauseBtn.style.display = "block";
-  playSong(0);
 }
 
 function getSongInfo(value) {
@@ -316,31 +349,21 @@ function getSongInfo(value) {
     singer.innerHTML = `<p>${playList[value].singer}</p>`;
     current_time.innerHTML = `<p>0:00</p>`;
     duration.innerHTML = `<p>${minutes}:${seconds}</p>`;
-    playback_time.value = `0`;
   });
 }
 
 function getTimeStamp() {
-  let elapsedTime = audio.currentTime;
-  // convert audio.currentTime (in seconds) to minutes
-  let minutes = Math.floor(elapsedTime / 60);
-  // calculate the remaining seconds
-  let seconds = Math.floor(elapsedTime % 60);
+  if (!isDragging) {
+    let elapsedTime = audio.currentTime;
+    let minutes = Math.floor(elapsedTime / 60);
+    let seconds = Math.floor(elapsedTime % 60);
 
-  seconds < 10
-    ? (current_time.innerHTML = `<p>${minutes}:0${seconds}</p>`)
-    : (current_time.innerHTML = `<p>${minutes}:${seconds}</p>`);
+    seconds < 10
+      ? (current_time.innerHTML = `<p>${minutes}:0${seconds}</p>`)
+      : (current_time.innerHTML = `<p>${minutes}:${seconds}</p>`);
 
-  playback_time.value = `${Math.floor((elapsedTime * 100) / songDuration) + 1}`;
-  progress_bar.style.width = `${
-    Math.floor((elapsedTime * 100) / songDuration) + 1
-  }%`;
-
-  console.log("playback_time: ", playback_time.value);
-  console.log(
-    "progress-bar width: ",
-    `${Math.floor((elapsedTime * 100) / songDuration) + 1}%`
-  );
+    progress_bar.style.width = `${(elapsedTime / songDuration) * 100}%`;
+  }
 }
 
 function setTimeStamp(value) {
@@ -354,12 +377,14 @@ function setTimeStamp(value) {
       ? (current_time.innerHTML = `<p>${minutes}:0${seconds}</p>`)
       : (current_time.innerHTML = `<p>${minutes}:${seconds}</p>`);
 
-    playback_time.value = `${Math.floor(elapsedTime)}`;
-    progress_bar.style.width = `${Math.floor(elapsedTime)}%`;
+    progress_bar.style.width = `${elapsedTime.toFixed(2)}%`;
+    progress_bar_container.setAttribute(
+      "aria-valuenow",
+      `${elapsedTime.toFixed(2)}`
+    );
   } else {
     current_time.innerHTML = `<p>0:00</p>`;
     audio.currentTime = 0;
-    playback_time.value = 0;
     progress_bar_container.setAttribute("aria-valuenow", `0`);
     progress_bar.style.width = `0%`;
   }
@@ -377,6 +402,7 @@ function setMusicPlayerPlayBtn() {
   playBtn.style.display = "none";
   pauseBtn.style.display = "block";
 }
+
 function setMusicPlayerPauseBtn() {
   playBtn.style.display = "block";
   pauseBtn.style.display = "none";
@@ -412,25 +438,46 @@ function removeTrackBtn(value) {
   overlay.style.opacity = "";
 }
 
-function loadAlbum(value) {
-  let str = "";
-  length = value;
-  for (let i = 0; i < length; i++) {
-    str += `
-      <div class="track track-${i + 1}">
-            <div class="track__image">
-              <img src='${playList[i].image}'/>
-              <div class="overlay">
-               <i class="fa fa-play" id="trackPlayBtn"></i>
-                <i class="fas fa-pause" id="trackPauseBtn"></i>
-              </div>
-            </div>
-            <div class="track__content">
-              <div class="track__title">${playList[i].title}</div>
-              <div class="track__singer">${playList[i].singer}</div>
-            </div>
-          </div>`;
-  }
+function loadTrackMetadata(track) {
+  return new Promise((resolve) => {
+    track.addEventListener("loadedmetadata", () => {
+      resolve(track.duration);
+    });
+  });
+}
 
+async function loadAlbum(value) {
+  let str = "";
+  album.innerHTML = "";
+  length = value;
+  let time = [];
+
+  for (let i = 0; i < length; i++) {
+    let track = new Audio(playList[i].song);
+
+    let duration = await loadTrackMetadata(track);
+    let minutes = Math.floor(duration / 60);
+    let seconds = Math.floor(duration % 60);
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    time.push(`${minutes}:${seconds}`);
+
+    str += `
+    <div class="track track-${i + 1}">
+          <div class="track__image">
+            <img src="${playList[i].image}"/>
+            <div class="overlay">
+             <i class="fa fa-play" id="trackPlayBtn"></i>
+              <i class="fas fa-pause" id="trackPauseBtn"></i>
+            </div>
+          </div>
+          <div class="track__content">
+            <div class="track__title">${playList[i].title}</div>
+            <div class="track__singer">${playList[i].singer}</div>
+          </div>
+          <div class="track__duration">${time[i]}</div>
+          <div class="track__option"><i class="fas fa-ellipsis-v"></i></div>
+        </div>`;
+  }
+  // Update the album container once all tracks are loaded
   album.innerHTML = str;
 }
