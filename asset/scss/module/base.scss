@@ -1,0 +1,49 @@
+@import "../helper/variables.scss";
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+.activeTrack {
+  background: $cod-gray;
+}
+
+.hide {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.animate-rotate {
+  animation: rotate 10s infinite linear;
+}
+
+.slide-in {
+  right: 0px !important;
+}
+
+.music-ui {
+  width: 100%;
+  height: 100%;
+  /* padding: 30px 16px; */
+  background: black;
+  overflow: hidden;
+
+  .row {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    #col-1,
+    #col-2 {
+      height: 100%;
+    }
+  }
+}
+
+

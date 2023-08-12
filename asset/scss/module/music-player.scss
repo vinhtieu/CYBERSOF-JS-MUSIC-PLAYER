@@ -1,0 +1,357 @@
+@import "../helper/variables.scss";
+
+/* *Music Player* */
+
+.music-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: $white;
+
+  .phonograph-record {
+    color: white;
+    height: 18rem;
+    width: 18rem;
+    border-radius: 50%;
+    margin: 0px;
+    margin-bottom: 50px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      background: #1a1a1a;
+    }
+  }
+
+  .info {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 60px;
+    min-height: 60px;
+    min-width: 150px;
+
+    .music-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .music-singer {
+      color: $silver-chalice;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+
+  .media-control {
+    width: 98%;
+    margin-bottom: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    color: $silver-chalice;
+
+    .progress-container {
+      height: 8px;
+      width: 100%;
+      overflow: visible;
+      border-radius: 8px;
+      background: $boulder;
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        transition: none;
+        position: relative;
+        overflow: visible;
+        border-radius: 8px;
+        cursor: pointer;
+        background: white;
+
+        &::before {
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          position: absolute;
+          right: -5px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: all 0.5s;
+          z-index: 1;
+          background: $white;
+        }
+
+        &:hover {
+          &::before {
+            content: "";
+            width: 15px;
+            height: 15px;
+            right: -7.5px;
+          }
+        }
+
+        &::after {
+          content: "";
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background: white;
+          position: absolute;
+          right: -7.5px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: all 0.5s;
+        }
+
+        &:hover {
+          &::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            right: -10px;
+          }
+        }
+      }
+    }
+  }
+
+  .button-control {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    button {
+      padding: 0;
+      margin: 0;
+      position: relative;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+
+      .volume-icon path,
+      .mute-icon path,
+      .repeat-icon path,
+      .prev-icon path,
+      .next-icon path,
+      .repeat-one-icon path,
+      .shuffle-icon path,
+      .volume-icon path,
+      .mute-icon path {
+        fill: $silver-chalice;
+        transition: fill 0.3s ease;
+      }
+
+      &:hover {
+        color: white;
+        .volume-icon path,
+        .mute-icon path,
+        .repeat-icon path,
+        .prev-icon path,
+        .next-icon path,
+        .repeat-one-icon path,
+        .shuffle-icon path,
+        .volume-icon path,
+        .mute-icon path {
+          fill: white;
+        }
+      }
+    }
+
+    i {
+      padding: 16px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .shuffle-btn,
+    .repeat-btn,
+    .repeat-one-btn,
+    .volume-btn,
+    .mute-btn {
+      width: 30px;
+      height: 30px;
+    }
+
+    #nextIcon,
+    #prevIcon,
+    #shuffleIcon,
+    #repeatIcon,
+    #repeatOneIcon,
+    #volumeIcon,
+    #muteIcon {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .button-control--1 {
+    margin-bottom: 40px;
+    gap: 20px;
+
+    .play-pause {
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+      position: relative;
+      background: White;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      #playIcon,
+      #pauseIcon {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        color: $black;
+        position: relative;
+      }
+
+      #playIcon {
+        display: block;
+        &::before {
+          position: absolute;
+          top: 50%;
+          left: 55%;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      #pauseIcon {
+        display: none;
+        &::before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+
+    .prev-btn,
+    .next-btn {
+      width: 40px;
+      height: 40px;
+    }
+
+    .repeat-one-btn {
+      display: none;
+    }
+  }
+
+  .button-control--2 {
+    width: 100%;
+    gap: 13px;
+    .mute-btn {
+      flex: 0 0 30px;
+      display: block;
+    }
+
+    #volumeSlider {
+      width: 72%;
+      height: 8px;
+      appearance: none;
+      background-color: $boulder;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #volumeSlider::-webkit-slider-thumb,
+    #volumeSlider::-moz-range-thumb,
+    #volumeSlider::-ms-thumb {
+      appearance: none;
+      background: $white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .volume-btn {
+      flex: 0 0 30px;
+      display: block;
+    }
+  }
+}
+
+// .upload-file {
+//   position: absolute;
+//   top: 50%;
+//   right: -25%;
+//   transform: translateY(-50%);
+//   display: flex;
+//   transition: all 0.5s;
+// }
+
+// .upload-file h2 {
+//   margin-bottom: 24px;
+//   text-align: center;
+// }
+
+// .upload-file h3 {
+//   margin-bottom: 16px;
+// }
+
+// .upload-file h3:last-of-type {
+//   margin-top: 24px;
+// }
+
+// .upload-file label,
+// .upload-file input {
+//   margin-bottom: 8px;
+// }
+
+// .upload-file button {
+//   margin-top: 24px;
+// }
+
+// .upload-file .box-2 .card {
+//   border-radius: 16px;
+//   height: auto;
+//   border-top-left-radius: 0;
+// }
+
+// .upload-file .box-2 .card .alert {
+//   margin-top: 16px;
+//   transition: all 0.2s;
+//   opacity: 1;
+//   visibility: visible;
+// }
+
+// #btnSideCard {
+//   width: 60px;
+//   height: 60px;
+//   padding: 16px;
+//   font-size: 25px;
+//   border-top-left-radius: 8px;
+//   border-bottom-left-radius: 8px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: white;
+//   background: #0d1326;
+//   border-right: 0px;
+//   border-top-right-radius: 0;
+//   border-bottom-right-radius: 0;
+//   cursor: pointer;
+//   transition: all 0.5s;
+//   align-self: baseline;
+// }

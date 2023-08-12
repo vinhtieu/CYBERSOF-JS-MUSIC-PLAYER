@@ -1,0 +1,43 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+.activeTrack {
+  background: #1a1a1a;
+}
+
+.hide {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.animate-rotate {
+  animation: rotate 10s infinite linear;
+}
+
+.slide-in {
+  right: 0px !important;
+}
+
+.music-ui {
+  width: 100%;
+  height: 100%;
+  /* padding: 30px 16px; */
+  background: black;
+  overflow: hidden;
+}
+.music-ui .row {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.music-ui .row #col-1,
+.music-ui .row #col-2 {
+  height: 100%;
+}/*# sourceMappingURL=base.css.map */

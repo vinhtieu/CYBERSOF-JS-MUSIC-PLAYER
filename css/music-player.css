@@ -1,0 +1,259 @@
+/* *Music Player* */
+.music-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: #fff;
+}
+.music-player .phonograph-record {
+  color: white;
+  height: 18rem;
+  width: 18rem;
+  border-radius: 50%;
+  margin: 0px;
+  margin-bottom: 50px;
+  overflow: hidden;
+}
+.music-player .phonograph-record img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+  background: #1a1a1a;
+}
+.music-player .info {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 60px;
+  min-height: 60px;
+  min-width: 150px;
+}
+.music-player .info .music-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+.music-player .info .music-singer {
+  color: #a7a7a7;
+  font-size: 16px;
+  font-weight: 400;
+}
+.music-player .media-control {
+  width: 98%;
+  margin-bottom: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  color: #a7a7a7;
+}
+.music-player .media-control .progress-container {
+  height: 8px;
+  width: 100%;
+  overflow: visible;
+  border-radius: 8px;
+  background: #767676;
+}
+.music-player .media-control .progress-container .progress-bar {
+  width: 0%;
+  height: 100%;
+  transition: none;
+  position: relative;
+  overflow: visible;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+}
+.music-player .media-control .progress-container .progress-bar::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.5s;
+  z-index: 1;
+  background: #fff;
+}
+.music-player .media-control .progress-container .progress-bar:hover::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  right: -7.5px;
+}
+.music-player .media-control .progress-container .progress-bar::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  right: -7.5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.5s;
+}
+.music-player .media-control .progress-container .progress-bar:hover::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  right: -10px;
+}
+.music-player .button-control {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.music-player .button-control button {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+}
+.music-player .button-control button .volume-icon path,
+.music-player .button-control button .mute-icon path,
+.music-player .button-control button .repeat-icon path,
+.music-player .button-control button .prev-icon path,
+.music-player .button-control button .next-icon path,
+.music-player .button-control button .repeat-one-icon path,
+.music-player .button-control button .shuffle-icon path,
+.music-player .button-control button .volume-icon path,
+.music-player .button-control button .mute-icon path {
+  fill: #a7a7a7;
+  transition: fill 0.3s ease;
+}
+.music-player .button-control button:hover {
+  color: white;
+}
+.music-player .button-control button:hover .volume-icon path,
+.music-player .button-control button:hover .mute-icon path,
+.music-player .button-control button:hover .repeat-icon path,
+.music-player .button-control button:hover .prev-icon path,
+.music-player .button-control button:hover .next-icon path,
+.music-player .button-control button:hover .repeat-one-icon path,
+.music-player .button-control button:hover .shuffle-icon path,
+.music-player .button-control button:hover .volume-icon path,
+.music-player .button-control button:hover .mute-icon path {
+  fill: white;
+}
+.music-player .button-control i {
+  padding: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.music-player .button-control .shuffle-btn,
+.music-player .button-control .repeat-btn,
+.music-player .button-control .repeat-one-btn,
+.music-player .button-control .volume-btn,
+.music-player .button-control .mute-btn {
+  width: 30px;
+  height: 30px;
+}
+.music-player .button-control #nextIcon,
+.music-player .button-control #prevIcon,
+.music-player .button-control #shuffleIcon,
+.music-player .button-control #repeatIcon,
+.music-player .button-control #repeatOneIcon,
+.music-player .button-control #volumeIcon,
+.music-player .button-control #muteIcon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.music-player .button-control--1 {
+  margin-bottom: 40px;
+  gap: 20px;
+}
+.music-player .button-control--1 .play-pause {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  position: relative;
+  background: White;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.music-player .button-control--1 .play-pause #playIcon,
+.music-player .button-control--1 .play-pause #pauseIcon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  color: #000000;
+  position: relative;
+}
+.music-player .button-control--1 .play-pause #playIcon {
+  display: block;
+}
+.music-player .button-control--1 .play-pause #playIcon::before {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+}
+.music-player .button-control--1 .play-pause #pauseIcon {
+  display: none;
+}
+.music-player .button-control--1 .play-pause #pauseIcon::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.music-player .button-control--1 .prev-btn,
+.music-player .button-control--1 .next-btn {
+  width: 40px;
+  height: 40px;
+}
+.music-player .button-control--1 .repeat-one-btn {
+  display: none;
+}
+.music-player .button-control--2 {
+  width: 100%;
+  gap: 13px;
+}
+.music-player .button-control--2 .mute-btn {
+  flex: 0 0 30px;
+  display: block;
+}
+.music-player .button-control--2 #volumeSlider {
+  width: 72%;
+  height: 8px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: #767676;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.music-player .button-control--2 #volumeSlider::-webkit-slider-thumb,
+.music-player .button-control--2 #volumeSlider::-moz-range-thumb,
+.music-player .button-control--2 #volumeSlider::-ms-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  background: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.music-player .button-control--2 .volume-btn {
+  flex: 0 0 30px;
+  display: block;
+}/*# sourceMappingURL=music-player.css.map */
